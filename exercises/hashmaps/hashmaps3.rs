@@ -62,6 +62,7 @@ mod tests {
 
         let mut keys: Vec<&String> = scores.keys().collect();
         keys.sort();
+        println!("{:?}", keys);
         assert_eq!(
             keys,
             vec!["England", "France", "Germany", "Italy", "Poland", "Spain"]
