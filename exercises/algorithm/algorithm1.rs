@@ -72,11 +72,42 @@ impl<T> LinkedList<T> {
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+
+        let mut cursor_a = list_a.start;
+        let mut cursor_b = list_b.start;
+
+        let mut merged = LinkedList::new();
+        let mut cursor_merged = &mut merged.start;
+
+        while let (Some(a), Some(b)) = (cursor_a, cursor_b) {
+            if unsafe { &a.as_ref().val } < unsafe { &b.as_ref().val } {
+                let mut next = None;
+                std::mem::swap(&mut next, &mut unsafe{a.as_ref().next});
+                *cursor_merged = corsor_a;
+
+                let node_a_mut: &mut Node<T> = unsafe{a.as_mut()};
+                cursor_merged = &mut node_a_mut.next;
+                cursor_a = next;
+
+            } else {
+                let mut next = None;
+                std::mem::swap(&mut next, &mut unsafe{ b.as_ref().next});
+                *cursor_merged = corsor_b;
+                let node_b_mut: &mut Node<T> = unsafe{b.as_mut()};
+                cursor_merged = &mut node_b_mut.next;
+                cursor_b = next;
+            }
         }
+
+        if cursor_a.is_some() {
+            *cursor_merged = cursor_a.unwrap();
+        }
+
+        if cursor_b.is_some() {
+            *cursor_merged = cursor_b.unwrap();
+        }
+
+        merged
 	}
 }
 
