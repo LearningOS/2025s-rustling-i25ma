@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,6 +69,7 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T: Ord
 	{
 		//TODO
 
@@ -79,11 +79,11 @@ impl<T> LinkedList<T> {
         let mut merged = LinkedList::new();
         let mut cursor_merged = &mut merged.start;
 
-        while let (Some(a), Some(b)) = (cursor_a, cursor_b) {
+        while let (Some(mut a), Some(mut b)) = (cursor_a, cursor_b) {
             if unsafe { &a.as_ref().val } < unsafe { &b.as_ref().val } {
                 let mut next = None;
-                std::mem::swap(&mut next, &mut unsafe{a.as_ref().next});
-                *cursor_merged = corsor_a;
+                std::mem::swap(&mut next, &mut unsafe{a.as_mut().next});
+                *cursor_merged = cursor_a;
 
                 let node_a_mut: &mut Node<T> = unsafe{a.as_mut()};
                 cursor_merged = &mut node_a_mut.next;
@@ -91,8 +91,8 @@ impl<T> LinkedList<T> {
 
             } else {
                 let mut next = None;
-                std::mem::swap(&mut next, &mut unsafe{ b.as_ref().next});
-                *cursor_merged = corsor_b;
+                std::mem::swap(&mut next, &mut unsafe{ b.as_mut().next});
+                *cursor_merged = cursor_b;
                 let node_b_mut: &mut Node<T> = unsafe{b.as_mut()};
                 cursor_merged = &mut node_b_mut.next;
                 cursor_b = next;
@@ -100,11 +100,11 @@ impl<T> LinkedList<T> {
         }
 
         if cursor_a.is_some() {
-            *cursor_merged = cursor_a.unwrap();
+            *cursor_merged = cursor_a;
         }
 
         if cursor_b.is_some() {
-            *cursor_merged = cursor_b.unwrap();
+            *cursor_merged = cursor_b;
         }
 
         merged

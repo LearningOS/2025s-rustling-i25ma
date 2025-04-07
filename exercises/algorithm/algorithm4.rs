@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -51,12 +50,20 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        if let Some(ref mut node) = self.root {
+            node.insert(value);
+        } else {
+            self.root = Some(Box::new(TreeNode::new(value)));
+        }
     }
 
     // Search for a value in the BST
-    fn search(&self, value: T) -> bool {
+    fn search(&mut self, value: T) -> bool {
         //TODO
-        true
+        match self.root {
+            Some(ref mut node) => node.search(value),
+            None => false,
+        }
     }
 }
 
@@ -65,8 +72,35 @@ where
     T: Ord,
 {
     // Insert a node into the tree
-    fn insert(&mut self, value: T) {
+    fn insert(&mut self, value: T){
         //TODO
+        if value == self.value {
+            return;
+        } else if value < self.value {
+            match self.left {
+                Some(ref mut node) => node.insert(value),
+                None => self.left = Some(Box::new(TreeNode::new(value))),
+            }
+        } else {
+            match self.right {
+                Some(ref mut node) => node.insert(value),
+                None => self.right = Some(Box::new(TreeNode::new(value))),
+            }
+        }
+    }
+
+    fn search(&mut self, value: T) -> bool {
+        match value.cmp(&self.value) {
+            Ordering::Equal => return true,
+            Ordering::Less => match self.left {
+                Some(ref mut node) => node.search(value),
+                None => false,
+            },
+            Ordering::Greater => match self.right {
+                Some(ref mut node) => node.search(value),
+                None => false,
+            }
+        }
     }
 }
 
